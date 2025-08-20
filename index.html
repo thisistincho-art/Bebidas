@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Barista Minimal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="wrap">
+    <h1>Barista Minimal</h1>
+    <p class="sub">Proporciones + temporizadores (estilo Martin)</p>
+  </header>
+
+  <main id="app" class="wrap">
+    <!-- Las secciones se renderizan desde script.js -->
+  </main>
+
+  <template id="card-tpl">
+    <section class="section">
+      <h2 class="section-title"></h2>
+      <div class="sizes"></div>
+      <div class="items"></div>
+    </section>
+  </template>
+
+  <template id="item-tpl">
+    <article class="card">
+      <button class="card-head" aria-expanded="false">
+        <span class="card-title"></span>
+        <span class="chev">▾</span>
+      </button>
+      <div class="card-body">
+        <div class="props"></div>
+        <div class="timers"></div>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>

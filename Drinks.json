@@ -1,0 +1,316 @@
+{
+  "sections": [
+    {
+      "name": "Café solo",
+      "groups": [
+        {
+          "sizeLabel": null,
+          "items": [
+            {
+              "name": "Espresso",
+              "props": [
+                {"k": "Base", "v": "1 cdita Dolca + 30 ml agua (batir 10 s)"},
+                {"k": "Volumen", "v": "30 ml"}
+              ],
+              "timers": {"coffee": 30, "milk": 0}
+            },
+            {
+              "name": "Lungo",
+              "props": [
+                {"k": "Base", "v": "1 cdita Dolca + 45 ml agua"},
+                {"k": "Volumen", "v": "45 ml"}
+              ],
+              "timers": {"coffee": 30, "milk": 0}
+            },
+            {
+              "name": "Doppio",
+              "props": [
+                {"k": "Base", "v": "2 cditas Dolca + 60 ml agua"},
+                {"k": "Volumen", "v": "60 ml"}
+              ],
+              "timers": {"coffee": 30, "milk": 0}
+            },
+            {
+              "name": "Doppio Lungo",
+              "props": [
+                {"k": "Base", "v": "2 cditas Dolca + 90 ml agua"},
+                {"k": "Volumen", "v": "90 ml"}
+              ],
+              "timers": {"coffee": 30, "milk": 0}
+            },
+            {
+              "name": "Long Black (Americano)",
+              "props": [
+                {"k": "Base", "v": "1 cdita Dolca + 30 ml + 90 ml agua caliente"},
+                {"k": "Volumen", "v": "120 ml"}
+              ],
+              "timers": {"coffee": 30, "milk": 0}
+            },
+            {
+              "name": "Filtrado",
+              "props": [
+                {"k": "Base", "v": "Café filtrado 180–250 ml"},
+                {"k": "Notas", "v": "No usa Dolca"}
+              ],
+              "timers": {"coffee": 0, "milk": 0}
+            },
+            {
+              "name": "Batch Brew",
+              "props": [
+                {"k": "Base", "v": "Café filtrado de jarra"},
+                {"k": "Volumen", "v": "200 ml aprox."}
+              ],
+              "timers": {"coffee": 0, "milk": 0}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Café fresco",
+      "groups": [
+        {
+          "sizeLabel": null,
+          "items": [
+            {
+              "name": "Cold Brew",
+              "props": [
+                {"k": "Base", "v": "Cold brew 200 ml con hielo"}
+              ],
+              "timers": {"coffee": 0, "milk": 0}
+            },
+            {
+              "name": "Lemon Cold Brew",
+              "props": [
+                {"k": "Base", "v": "Cold brew 180 ml + limón + hielo"}
+              ],
+              "timers": {"coffee": 0, "milk": 0}
+            },
+            {
+              "name": "Flat White frío",
+              "props": [
+                {"k": "Base", "v": "1 cdita Dolca + 30 ml (frío)"},
+                {"k": "Leche", "v": "120 ml fría batida botella"},
+                {"k": "Vaso", "v": "150 ml + hielo"}
+              ],
+              "timers": {"coffee": 30, "milk": 30}
+            },
+            {
+              "name": "Latte frío",
+              "props": [
+                {"k": "Base", "v": "1 cdita Dolca + 30 ml (frío)"},
+                {"k": "Leche", "v": "180 ml fría"},
+                {"k": "Vaso", "v": "300 ml + hielo"}
+              ],
+              "timers": {"coffee": 30, "milk": 30}
+            },
+            {
+              "name": "Magic frío",
+              "props": [
+                {"k": "Base", "v": "Doble ristretto: 2 cditas + 40 ml (frío)"},
+                {"k": "Leche", "v": "110 ml fría batida"},
+                {"k": "Vaso", "v": "150 ml + hielo"}
+              ],
+              "timers": {"coffee": 30, "milk": 30}
+            },
+            {
+              "name": "Hoppy Espresso",
+              "props": [
+                {"k": "Base", "v": "Con soda lúpulo / espuma"},
+                {"k": "Notas", "v": "Refrescante"}
+              ],
+              "timers": {"coffee": 0, "milk": 0}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Té",
+      "groups": [
+        {
+          "sizeLabel": "Taza 150 ml",
+          "items": [
+            {
+              "name": "Té negro Taragüi (saquito 2 g)",
+              "props": [
+                {"k": "Agua", "v": "150 ml hirviendo"},
+                {"k": "Tiempo", "v": "4:00 min"}
+              ],
+              "timers": {"tea": 240}
+            },
+            {
+              "name": "Mate cocido (saquito)",
+              "props": [
+                {"k": "Agua", "v": "150 ml hirviendo"},
+                {"k": "Tiempo", "v": "4:00 min"}
+              ],
+              "timers": {"tea": 240}
+            },
+            {
+              "name": "Cachamai digestivas (saquito)",
+              "props": [
+                {"k": "Agua", "v": "150 ml hirviendo"},
+                {"k": "Tiempo", "v": "4:00 min"}
+              ],
+              "timers": {"tea": 240}
+            },
+            {
+              "name": "Earl Grey (saquito)",
+              "props": [
+                {"k": "Agua", "v": "150 ml hirviendo"},
+                {"k": "Tiempo", "v": "4:00 min"}
+              ],
+              "timers": {"tea": 240}
+            }
+          ]
+        },
+        {
+          "sizeLabel": "Taza 300 ml",
+          "items": [
+            {
+              "name": "Té negro Taragüi (saquito 2 g)",
+              "props": [
+                {"k": "Agua", "v": "300 ml hirviendo"},
+                {"k": "Tiempo", "v": "4:00 min"}
+              ],
+              "timers": {"tea": 240}
+            },
+            {
+              "name": "Mate cocido (saquito)",
+              "props": [
+                {"k": "Agua", "v": "300 ml hirviendo"},
+                {"k": "Tiempo", "v": "4:00 min"}
+              ],
+              "timers": {"tea": 240}
+            },
+            {
+              "name": "Cachamai digestivas (saquito)",
+              "props": [
+                {"k": "Agua", "v": "300 ml hirviendo"},
+                {"k": "Tiempo", "v": "4:00 min"}
+              ],
+              "timers": {"tea": 240}
+            },
+            {
+              "name": "Earl Grey (saquito)",
+              "props": [
+                {"k": "Agua", "v": "300 ml hirviendo"},
+                {"k": "Tiempo", "v": "4:00 min"}
+              ],
+              "timers": {"tea": 240}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Café con leche",
+      "groups": [
+        {
+          "sizeLabel": "Taza 150 ml",
+          "items": [
+            {
+              "name": "Macchiato",
+              "props": [
+                {"k": "Base", "v": "30 ml espresso (Dolca)"},
+                {"k": "Leche", "v": "Una mancha (10–20 ml espumada)"}
+              ],
+              "timers": {"coffee": 30, "milk": 30}
+            },
+            {
+              "name": "Magic (doble ristretto)",
+              "props": [
+                {"k": "Base", "v": "2 cditas + 40 ml (ristretto)"},
+                {"k": "Leche", "v": "≈110 ml espumada"}
+              ],
+              "timers": {"coffee": 30, "milk": 30}
+            },
+            {
+              "name": "Cappuccino",
+              "props": [
+                {"k": "Base", "v": "30 ml espresso"},
+                {"k": "Leche", "v": "120 ml espumada (más aire)"}
+              ],
+              "timers": {"coffee": 30, "milk": 30}
+            },
+            {
+              "name": "Flat White",
+              "props": [
+                {"k": "Base", "v": "30 ml espresso"},
+                {"k": "Leche", "v": "120 ml microespuma"}
+              ],
+              "timers": {"coffee": 30, "milk": 30}
+            }
+          ]
+        },
+        {
+          "sizeLabel": "Taza 300 ml",
+          "items": [
+            {
+              "name": "Latte",
+              "props": [
+                {"k": "Base", "v": "60 ml espresso (doble)"},
+                {"k": "Leche", "v": "240 ml microespuma"}
+              ],
+              "timers": {"coffee": 30, "milk": 30}
+            },
+            {
+              "name": "Flat White",
+              "props": [
+                {"k": "Base", "v": "60 ml espresso (doble)"},
+                {"k": "Leche", "v": "240 ml microespuma"}
+              ],
+              "timers": {"coffee": 30, "milk": 30}
+            },
+            {
+              "name": "Mocaccino",
+              "props": [
+                {"k": "Base", "v": "60 ml espresso + 1 cda cacao"},
+                {"k": "Leche", "v": "240 ml espumada"}
+              ],
+              "timers": {"coffee": 30, "milk": 30}
+            },
+            {
+              "name": "Vainilla Latte",
+              "props": [
+                {"k": "Base", "v": "60 ml espresso + 10 ml jarabe vainilla"},
+                {"k": "Leche", "v": "240 ml microespuma"}
+              ],
+              "timers": {"coffee": 30, "milk": 30}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Para picotear",
+      "groups": [
+        {
+          "sizeLabel": null,
+          "items": [
+            {"name":"Medialuna","food":true},
+            {"name":"Medialuna con jamón y queso","food":true},
+            {"name":"Roll de canela","food":true},
+            {"name":"Tortita negra","food":true},
+            {"name":"Cookie pistacho y choc. blanco","food":true},
+            {"name":"Cookie remolacha, frambuesa y 70%","food":true},
+            {"name":"Cookie carrot con nueces","food":true},
+            {"name":"Budín manzana/canela/frutos","food":true},
+            {"name":"Muffin choco + maní (V)","food":true},
+            {"name":"Alfajor maní + dulce de leche","food":true},
+            {"name":"Chipá (GF)","food":true},
+            {"name":"Scon de queso","food":true},
+            {"name":"Cañoncito DL","food":true},
+            {"name":"Huevos revueltos + pan","food":true},
+            {"name":"Tostadas queso o mermelada","food":true},
+            {"name":"Yogurt + granola + fruta","food":true},
+            {"name":"Sándwich pavita, queso ahumado, tomates confitados","food":true},
+            {"name":"Sándwich focaccia, jamón, queso, pesto y cherries","food":true},
+            {"name":"Avocado smash","food":true}
+          ]
+        }
+      ]
+    }
+  ]
+}
