@@ -1,17 +1,314 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Barista Minimal</title>
-  <link rel="stylesheet" href="styles.css" />
-  <!-- React sin build -->
-  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cafetería Casera ☕</title>
+    <!-- Incluye Tailwind CSS para un estilizado rápido y moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuente Inter para un estilo limpio y moderno -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F8F8; /* Un blanco muy suave para el fondo */
+        }
+        .cup-container {
+            width: 150px;
+            height: 180px;
+            background-color: rgba(255, 255, 255, 0.7); /* Taza semi-transparente */
+            border: 1px solid rgba(200, 200, 200, 0.5); /* Borde suave */
+            border-radius: 0 0 40px 40px / 0 0 15px 15px; /* Bordes redondeados */
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* Sombra muy sutil */
+            backdrop-filter: blur(5px); /* Efecto de cristal esmerilado */
+            -webkit-backdrop-filter: blur(5px); /* Para compatibilidad con Safari */
+        }
+        .cup-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            transition: height 0.6s ease-out; /* Transición más suave */
+        }
+        /* Colores de llenado para café y leche/té (pasteles y claros) */
+        .coffee-fill-color {
+            /* Color de fondo por defecto, se sobrescribe por JS */
+            background-color: #6F4E37;
+        }
+        .milk-fill-color {
+            /* Color de fondo por defecto, se sobrescribe por JS */
+            background-color: #FFFDD0; /* Crema suave para la leche */
+        }
+        .handle {
+            width: 50px;
+            height: 70px;
+            border: 6px solid rgba(200, 200, 200, 0.5);
+            border-radius: 0 50% 50% 0 / 0 35% 35% 0;
+            position: absolute;
+            right: -50px;
+            top: 50px;
+            background-color: transparent; /* Mango transparente */
+        }
+        /* Estilo para la tarjeta de detalles con transparencia */
+        #drink-details-card {
+            background-color: rgba(255, 255, 255, 0.7); /* Fondo semi-transparente */
+            border: 1px solid rgba(200, 200, 200, 0.4);
+            backdrop-filter: blur(10px); /* Efecto de cristal esmerilado más fuerte */
+            -webkit-backdrop-filter: blur(10px);
+        }
+    </style>
 </head>
-<body>
-  <div id="root"></div>
-  <script type="text/babel" src="app.js"></script>
+<body class="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-50 text-gray-800">
+
+    <!-- Encabezado -->
+    <header class="text-center mb-10 w-full max-w-4xl">
+        <h1 class="text-5xl lg:text-6xl font-light text-gray-900 mb-3 tracking-tight rounded-2xl p-4 bg-white shadow-lg">☕ Mi Cafetería Casera ☕</h1>
+        <p class="text-lg text-gray-500 font-extralight">¡Guía para tus preparaciones perfectas!</p>
+    </header>
+
+    <!-- Contenido Principal: Menú y Detalles -->
+    <main class="w-full max-w-5xl bg-white p-8 rounded-3xl shadow-2xl flex flex-col lg:flex-row gap-10">
+        <section class="flex-1">
+            <h2 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Menú de Bebidas</h2>
+            <div id="menu-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <!-- Las bebidas se cargarán aquí con JavaScript -->
+            </div>
+        </section>
+
+        <!-- Tarjeta de Detalles de la Bebida (inicialmente oculta) -->
+        <aside id="drink-details-card" class="flex-1 p-6 rounded-3xl shadow-xl hidden flex-col items-center justify-center text-center border border-gray-100">
+            <h2 id="details-drink-name" class="text-3xl font-semibold text-gray-900 mb-4 tracking-wide"></h2>
+            <div class="mb-6 text-gray-700 space-y-2 font-light">
+                <p id="details-barista-comment" class="text-lg italic text-gray-600 mb-2"></p> <!-- Comentario del barista -->
+                <p id="details-proportions" class="text-base"></p>
+                <p id="details-other-info" class="text-sm opacity-80"></p>
+            </div>
+
+            <!-- Visualización de la Taza -->
+            <div class="mb-6 flex flex-col items-center">
+                <p class="text-gray-600 mb-3 text-sm font-light">Taza de 300ml:</p>
+                <div class="cup-container">
+                    <div id="cup-milk-fill" class="cup-fill milk-fill-color"></div>
+                    <div id="cup-coffee-fill" class="cup-fill coffee-fill-color"></div>
+                    <div class="handle"></div>
+                </div>
+            </div>
+
+            <!-- Temporizador -->
+            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl shadow-inner flex flex-col items-center w-full max-w-xs backdrop-filter backdrop-blur-sm bg-opacity-70">
+                <p class="text-xl font-medium text-gray-700 mb-3" id="timer-label"></p>
+                <div id="timer-display" class="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">00:00</div>
+                <button id="start-timer-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-7 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-75">
+                    Iniciar Temporizador
+                </button>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        const menuList = document.getElementById('menu-list');
+        const drinkDetailsCard = document.getElementById('drink-details-card');
+        const detailsDrinkName = document.getElementById('details-drink-name');
+        const detailsBaristaComment = document.getElementById('details-barista-comment'); // Nuevo elemento para el comentario
+        const detailsProportions = document.getElementById('details-proportions');
+        const detailsOtherInfo = document.getElementById('details-other-info');
+        const cupCoffeeFill = document.getElementById('cup-coffee-fill');
+        const cupMilkFill = document.getElementById('cup-milk-fill');
+        const timerLabel = document.getElementById('timer-label');
+        const timerDisplay = document.getElementById('timer-display');
+        const startTimerBtn = document.getElementById('start-timer-btn');
+
+        let timerInterval;
+        let currentTimerDuration = 0;
+        const BASE_ESPRESSO_SHOT = 30; // ml
+
+        // Definición de las bebidas con sus propiedades y COMENTARIOS DE BARISTA
+        const drinks = [
+            // Café Solo
+            { group: 'Café Solo', id: 'espresso_solo', name: 'Espresso', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 0, waterMl: 0, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#4A2B1A', cupMilkColor: 'transparent', comment: 'El corazón de todo buen café, puro e intenso.', description: 'Un shot concentrado de café.' },
+            { group: 'Café Solo', id: 'lungo', name: 'Lungo', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 0, waterMl: 60, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#5A3D2B', cupMilkColor: 'transparent', comment: 'Un espresso más suave, con más agua para un trago largo.', description: 'Un espresso más largo con más agua.' },
+            { group: 'Café Solo', id: 'doppio', name: 'Doppio', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT * 2, milkMl: 0, waterMl: 0, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#4A2B1A', cupMilkColor: 'transparent', comment: 'Doble energía para empezar bien el día.', description: 'Doble shot de espresso.' },
+            { group: 'Café Solo', id: 'long_black_americano', name: 'Long Black / Americano', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 0, waterMl: 120, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#5A3D2B', cupMilkColor: 'transparent', comment: 'Fuerte como un espresso, pero para disfrutar tranquilamente.', description: 'Espresso diluido con agua caliente.' },
+            { group: 'Café Solo', id: 'batch_brew', name: 'Batch Brew', type: 'coffee', espressoMl: 0, milkMl: 0, waterMl: 250, totalCupMl: 300, frothTimeSeconds: 0, cupCoffeeColor: '#6F4E37', cupMilkColor: 'transparent', comment: 'El café del día, siempre listo para un buen momento.', description: 'Café filtrado preparado en grandes cantidades.' },
+            // Tecitos
+            { group: 'Tecitos', id: 'black_tea', name: 'Té Negro', type: 'tea', teaBagG: 2, waterMl: 200, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#8B4513', comment: 'Un clásico reconfortante, perfecto para cualquier momento.', description: 'Bolsita de té negro clásico.' },
+            { group: 'Tecitos', id: 'green_tea', name: 'Té Verde', type: 'tea', teaBagG: 2, waterMl: 200, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#8FBC8F', comment: 'Ligero y refrescante, ideal para una pausa saludable.', description: 'Bolsita de té verde fresco.' },
+            { group: 'Tecitos', id: 'white_tea', name: 'Té Blanco', type: 'tea', teaBagG: 2, waterMl: 200, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#E0BBE4', comment: 'Delicado y sutil, una experiencia de calma en cada sorbo.', description: 'Bolsita de té blanco delicado.' }, // Pastel purpura
+            { group: 'Tecitos', id: 'chai', name: 'Chai', type: 'tea', teaBagG: 2, waterMl: 200, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#A0522D', comment: 'Un viaje a la India con cada sorbo, especias y calidez.', description: 'Bolsita de té Chai especiado.' }, // Marrón terroso
+            { group: 'Tecitos', id: 'chai_latte', name: 'Chai Latte', type: 'tea_with_milk', teaBagG: 2, waterMl: 100, milkMl: 150, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#A0522D', cupMilkColor: '#FFFDD0', frothTimeSeconds: 30, comment: 'La calidez del chai con la cremosidad de la leche. ¡Una delicia!', description: 'Té Chai con leche espumada.' },
+            // Café con Leche
+            { group: 'Café con Leche', id: 'macchiato', name: 'Macchiato', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 10, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#6F4E37', cupMilkColor: '#FFFDD0', comment: 'Un espresso con solo un toque de leche para suavizar.', description: 'Espresso "manchado" con un toque de leche.' },
+            { group: 'Café con Leche', id: 'magic', name: 'Magic', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT * 2, milkMl: 120, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#6F4E37', cupMilkColor: '#FFFDD0', comment: 'Doble shot y leche microespumada, suave y fuerte a la vez.', description: 'Doble ristretto con leche cremosa (estilo australiano).' },
+            { group: 'Café con Leche', id: 'cappuccino_milk', name: 'Cappuccino', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 150, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#5A3D2B', cupMilkColor: '#FFFDD0', comment: 'El clásico por excelencia, con esa capa perfecta de espuma.', description: 'Espresso con leche y mucha espuma.' },
+            { group: 'Café con Leche', id: 'latte_milk', name: 'Latte', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 200, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#7B5E4F', cupMilkColor: '#FFFDD0', comment: 'Suave y cremoso, ideal para disfrutar de la leche con un toque de café.', description: 'Espresso con leche suave.' },
+            { group: 'Café con Leche', id: 'flat_white', name: 'Flat White', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT * 2, milkMl: 120, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#6F4E37', cupMilkColor: '#FFFDD0', comment: 'Sin espuma excesiva, solo la combinación perfecta de café y leche.', description: 'Doble ristretto con leche microespumada.' },
+            { group: 'Café con Leche', id: 'moccacino', name: 'Moccacino', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 180, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#3A2012', cupMilkColor: '#FFFDD0', comment: 'El abrazo dulce del café y el chocolate, pura indulgencia.', description: 'Espresso, chocolate y leche espumada.' }, // Color más oscuro para base de chocolate
+            { group: 'Café con Leche', id: 'vanilla_latte', name: 'Vanilla Latte', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 200, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#7B5E4F', cupMilkColor: '#FFFDD0', comment: 'El latte que conoces, pero con ese toque dulce y aromático de vainilla.', description: 'Latte con un toque de vainilla.' },
+        ];
+
+        // Función para renderizar el menú agrupado por categorías
+        function renderMenu() {
+            menuList.innerHTML = '';
+            const groupedDrinks = drinks.reduce((acc, drink) => {
+                (acc[drink.group] = acc[drink.group] || []).push(drink);
+                return acc;
+            }, {});
+
+            for (const groupName in groupedDrinks) {
+                const groupTitle = document.createElement('h3');
+                groupTitle.className = 'col-span-full text-2xl font-semibold text-gray-700 mt-6 mb-4 text-left border-b border-gray-200 pb-2';
+                groupTitle.textContent = groupName;
+                menuList.appendChild(groupTitle);
+
+                groupedDrinks[groupName].forEach(drink => {
+                    const button = document.createElement('button');
+                    button.className = 'bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-3 px-5 rounded-lg shadow-sm transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50 text-xl text-left';
+                    button.textContent = drink.name;
+                    button.onclick = () => showDrinkDetails(drink);
+                    menuList.appendChild(button);
+                });
+            }
+        }
+
+        // Función para mostrar los detalles de la bebida
+        function showDrinkDetails(drink) {
+            detailsDrinkName.textContent = drink.name;
+            drinkDetailsCard.classList.remove('hidden'); // Mostrar la tarjeta de detalles
+            drinkDetailsCard.classList.add('flex'); // Asegurarse de que esté en flex para centrar contenido
+
+            detailsBaristaComment.textContent = `"${drink.comment}"`; // Mostrar el comentario del barista
+
+            // Limpiar estilos previos de la taza
+            cupCoffeeFill.style.height = '0%';
+            cupMilkFill.style.height = '0%';
+            cupCoffeeFill.style.backgroundColor = '';
+            cupMilkFill.style.backgroundColor = '';
+
+            let liquidMl = 0; // Total de líquido en la bebida (café/té + leche + agua)
+            let timerInfoText = '';
+
+            if (drink.type === 'coffee') {
+                const milkMl = drink.milkMl;
+                const waterMl = drink.waterMl || 0; // Para Long Black / Americano, Lungo
+                liquidMl = drink.espressoMl + milkMl + waterMl;
+
+                detailsProportions.textContent = `Espresso: ${drink.espressoMl}ml, Leche: ${milkMl}ml${waterMl > 0 ? `, Agua: ${waterMl}ml` : ''}`;
+                timerInfoText = `Tiempo de batido (café y leche en botella): ${drink.frothTimeSeconds} segundos`;
+                currentTimerDuration = drink.frothTimeSeconds;
+
+                // Visualización de la taza para café
+                const totalFillHeight = (liquidMl / drink.totalCupMl) * 100; // Altura total de líquido en la taza
+                const espressoHeightInFill = (drink.espressoMl / liquidMl) * totalFillHeight;
+                const milkHeightInFill = (milkMl / liquidMl) * totalFillHeight;
+                const waterHeightInFill = (waterMl / liquidMl) * totalFillHeight;
+
+                cupCoffeeFill.style.height = `${espressoHeightInFill + waterHeightInFill}%`; // Café y agua en la capa de abajo
+                cupCoffeeFill.style.backgroundColor = drink.cupCoffeeColor;
+                cupCoffeeFill.style.bottom = '0%';
+
+                if (milkMl > 0) {
+                    cupMilkFill.style.height = `${milkHeightInFill}%`;
+                    cupMilkFill.style.backgroundColor = drink.cupMilkColor;
+                    cupMilkFill.style.bottom = `${espressoHeightInFill + waterHeightInFill}%`; // Leche sobre café/agua
+                } else {
+                    cupMilkFill.style.height = '0%';
+                    cupMilkFill.style.backgroundColor = 'transparent';
+                }
+
+                timerLabel.textContent = 'Temporizador de Batido:';
+
+            } else if (drink.type === 'tea') {
+                liquidMl = drink.waterMl;
+                detailsProportions.textContent = `Saquito de Té: ${drink.teaBagG}g, Agua: ${drink.waterMl}ml`;
+                timerInfoText = `Tiempo de infusión: ${Math.floor(drink.steepTimeSeconds / 60)} minutos`;
+                currentTimerDuration = drink.steepTimeSeconds;
+
+                // Visualización de la taza para té (solo agua con color de té)
+                const totalFillHeight = (liquidMl / drink.totalCupMl) * 100;
+                cupCoffeeFill.style.height = `${totalFillHeight}%`; // Usamos el "coffee-fill" como base para el té
+                cupCoffeeFill.style.backgroundColor = drink.cupTeaColor;
+                cupCoffeeFill.style.bottom = '0%'; // Siempre abajo
+                cupMilkFill.style.height = '0%'; // No hay leche
+                cupMilkFill.style.backgroundColor = 'transparent';
+
+                timerLabel.textContent = 'Temporizador de Infusión:';
+
+            } else if (drink.type === 'tea_with_milk') {
+                 liquidMl = drink.waterMl + drink.milkMl;
+                 detailsProportions.textContent = `Saquito de Té: ${drink.teaBagG}g, Agua: ${drink.waterMl}ml, Leche: ${drink.milkMl}ml`;
+                 timerInfoText = `Tiempo de infusión: ${Math.floor(drink.steepTimeSeconds / 60)} minutos, Tiempo de batido: ${drink.frothTimeSeconds} segundos`;
+                 currentTimerDuration = drink.steepTimeSeconds + drink.frothTimeSeconds; // Sumar tiempos
+
+                 const totalFillHeight = (liquidMl / drink.totalCupMl) * 100;
+                 const teaHeightInFill = (drink.waterMl / liquidMl) * totalFillHeight;
+                 const milkHeightInFill = (drink.milkMl / liquidMl) * totalFillHeight;
+
+                 cupCoffeeFill.style.height = `${teaHeightInFill}%`;
+                 cupCoffeeFill.style.backgroundColor = drink.cupTeaColor;
+                 cupCoffeeFill.style.bottom = '0%';
+
+                 cupMilkFill.style.height = `${milkHeightInFill}%`;
+                 cupMilkFill.style.backgroundColor = drink.cupMilkColor;
+                 cupMilkFill.style.bottom = `${teaHeightInFill}%`; // Leche sobre el té
+
+                 timerLabel.textContent = 'Temporizador Total:';
+            }
+
+            detailsOtherInfo.textContent = timerInfoText; // Muestra la información del temporizador
+
+            resetTimer(); // Reiniciar el temporizador al mostrar nuevos detalles
+        }
+
+        // Funciones del Temporizador (sin cambios significativos aquí)
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimerDisplay(seconds) {
+            timerDisplay.textContent = formatTime(seconds);
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            let timeLeft = currentTimerDuration;
+            updateTimerDisplay(timeLeft);
+
+            startTimerBtn.textContent = 'Reiniciar Temporizador';
+            startTimerBtn.onclick = resetTimer;
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay(timeLeft);
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = '¡Listo!';
+                    startTimerBtn.textContent = 'Iniciar Temporizador';
+                    startTimerBtn.onclick = startTimer;
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay(currentTimerDuration);
+            startTimerBtn.textContent = 'Iniciar Temporizador';
+            startTimerBtn.onclick = startTimer;
+        }
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMenu();
+            updateTimerDisplay(0);
+        });
+
+        // Variables para Firebase (no utilizadas en esta versión)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    </script>
 </body>
 </html>
