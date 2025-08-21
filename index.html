@@ -62,14 +62,8 @@
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-50 text-gray-800">
 
-    <!-- Encabezado -->
-    <header class="text-center mb-10 w-full max-w-4xl">
-        <h1 class="text-5xl lg:text-6xl font-light text-gray-900 mb-3 tracking-tight rounded-2xl p-4 bg-white shadow-lg">☕ Mi Cafetería Casera ☕</h1>
-        <p class="text-lg text-gray-500 font-extralight">¡Guía para tus preparaciones perfectas!</p>
-    </header>
-
     <!-- Contenido Principal: Menú y Detalles -->
-    <main class="w-full max-w-5xl bg-white p-8 rounded-3xl shadow-2xl flex flex-col lg:flex-row gap-10">
+    <main class="w-full max-w-5xl bg-white p-8 rounded-3xl shadow-2xl flex flex-col lg:flex-row gap-10 mt-10"> <!-- Añadido mt-10 para espacio superior -->
         <section class="flex-1">
             <h2 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Menú de Bebidas</h2>
             <div id="menu-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -82,6 +76,7 @@
             <h2 id="details-drink-name" class="text-3xl font-semibold text-gray-900 mb-4 tracking-wide"></h2>
             <div class="mb-6 text-gray-700 space-y-2 font-light">
                 <p id="details-barista-comment" class="text-lg italic text-gray-600 mb-2"></p> <!-- Comentario del barista -->
+                <p id="details-price" class="text-xl font-semibold text-gray-800 mb-2"></p> <!-- Precio de la bebida -->
                 <p id="details-proportions" class="text-base"></p>
                 <p id="details-other-info" class="text-sm opacity-80"></p>
             </div>
@@ -111,7 +106,8 @@
         const menuList = document.getElementById('menu-list');
         const drinkDetailsCard = document.getElementById('drink-details-card');
         const detailsDrinkName = document.getElementById('details-drink-name');
-        const detailsBaristaComment = document.getElementById('details-barista-comment'); // Nuevo elemento para el comentario
+        const detailsBaristaComment = document.getElementById('details-barista-comment');
+        const detailsPrice = document.getElementById('details-price'); // Nuevo elemento para el precio
         const detailsProportions = document.getElementById('details-proportions');
         const detailsOtherInfo = document.getElementById('details-other-info');
         const cupCoffeeFill = document.getElementById('cup-coffee-fill');
@@ -124,28 +120,32 @@
         let currentTimerDuration = 0;
         const BASE_ESPRESSO_SHOT = 30; // ml
 
-        // Definición de las bebidas con sus propiedades y COMENTARIOS DE BARISTA
+        // Definición de las bebidas con sus propiedades, COMENTARIOS DE BARISTA y PRECIOS
         const drinks = [
             // Café Solo
-            { group: 'Café Solo', id: 'espresso_solo', name: 'Espresso', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 0, waterMl: 0, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#4A2B1A', cupMilkColor: 'transparent', comment: 'El corazón de todo buen café, puro e intenso.', description: 'Un shot concentrado de café.' },
-            { group: 'Café Solo', id: 'lungo', name: 'Lungo', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 0, waterMl: 60, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#5A3D2B', cupMilkColor: 'transparent', comment: 'Un espresso más suave, con más agua para un trago largo.', description: 'Un espresso más largo con más agua.' },
-            { group: 'Café Solo', id: 'doppio', name: 'Doppio', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT * 2, milkMl: 0, waterMl: 0, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#4A2B1A', cupMilkColor: 'transparent', comment: 'Doble energía para empezar bien el día.', description: 'Doble shot de espresso.' },
-            { group: 'Café Solo', id: 'long_black_americano', name: 'Long Black / Americano', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 0, waterMl: 120, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#5A3D2B', cupMilkColor: 'transparent', comment: 'Fuerte como un espresso, pero para disfrutar tranquilamente.', description: 'Espresso diluido con agua caliente.' },
-            { group: 'Café Solo', id: 'batch_brew', name: 'Batch Brew', type: 'coffee', espressoMl: 0, milkMl: 0, waterMl: 250, totalCupMl: 300, frothTimeSeconds: 0, cupCoffeeColor: '#6F4E37', cupMilkColor: 'transparent', comment: 'El café del día, siempre listo para un buen momento.', description: 'Café filtrado preparado en grandes cantidades.' },
+            { group: 'Café Solo', id: 'espresso_solo', name: 'Espresso', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 0, waterMl: 0, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#4A2B1A', cupMilkColor: 'transparent', comment: 'El corazón de todo buen café, puro e intenso.', price: 3500 },
+            { group: 'Café Solo', id: 'espresso_lungo', name: 'Espresso Lungo', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 0, waterMl: 60, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#5A3D2B', cupMilkColor: 'transparent', comment: 'Un espresso más suave, con más agua para un trago largo.', price: 3500 },
+            { group: 'Café Solo', id: 'doppio', name: 'Doppio', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT * 2, milkMl: 0, waterMl: 0, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#4A2B1A', cupMilkColor: 'transparent', comment: 'Doble energía para empezar bien el día.', price: 3900 },
+            { group: 'Café Solo', id: 'doppio_lungo', name: 'Doppio Lungo', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT * 2, milkMl: 0, waterMl: 120, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#5A3D2B', cupMilkColor: 'transparent', comment: 'Doble la intensidad de un lungo, para los que necesitan un extra de café.', price: 3900 },
+            { group: 'Café Solo', id: 'long_black_americano', name: 'Long Black / Americano', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 0, waterMl: 120, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#5A3D2B', cupMilkColor: 'transparent', comment: 'Fuerte como un espresso, pero para disfrutar tranquilamente.', price: 4200 },
+            { group: 'Café Solo', id: 'batch_brew', name: 'Batch Brew', type: 'coffee', espressoMl: 0, milkMl: 0, waterMl: 250, totalCupMl: 300, frothTimeSeconds: 0, cupCoffeeColor: '#6F4E37', cupMilkColor: 'transparent', comment: 'El café del día, siempre listo para un buen momento.', price: 4000 },
             // Tecitos
-            { group: 'Tecitos', id: 'black_tea', name: 'Té Negro', type: 'tea', teaBagG: 2, waterMl: 200, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#8B4513', comment: 'Un clásico reconfortante, perfecto para cualquier momento.', description: 'Bolsita de té negro clásico.' },
-            { group: 'Tecitos', id: 'green_tea', name: 'Té Verde', type: 'tea', teaBagG: 2, waterMl: 200, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#8FBC8F', comment: 'Ligero y refrescante, ideal para una pausa saludable.', description: 'Bolsita de té verde fresco.' },
-            { group: 'Tecitos', id: 'white_tea', name: 'Té Blanco', type: 'tea', teaBagG: 2, waterMl: 200, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#E0BBE4', comment: 'Delicado y sutil, una experiencia de calma en cada sorbo.', description: 'Bolsita de té blanco delicado.' }, // Pastel purpura
-            { group: 'Tecitos', id: 'chai', name: 'Chai', type: 'tea', teaBagG: 2, waterMl: 200, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#A0522D', comment: 'Un viaje a la India con cada sorbo, especias y calidez.', description: 'Bolsita de té Chai especiado.' }, // Marrón terroso
-            { group: 'Tecitos', id: 'chai_latte', name: 'Chai Latte', type: 'tea_with_milk', teaBagG: 2, waterMl: 100, milkMl: 150, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#A0522D', cupMilkColor: '#FFFDD0', frothTimeSeconds: 30, comment: 'La calidez del chai con la cremosidad de la leche. ¡Una delicia!', description: 'Té Chai con leche espumada.' },
+            { group: 'Tecitos', id: 'black_tea', name: 'Té Negro', type: 'tea', teaBagG: 2, waterMl: 200, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#8B4513', comment: 'Un clásico reconfortante, perfecto para cualquier momento.', price: 4000 },
+            { group: 'Tecitos', id: 'green_tea', name: 'Té Verde', type: 'tea', teaBagG: 2, waterMl: 200, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#8FBC8F', comment: 'Ligero y refrescante, ideal para una pausa saludable.', price: 4000 },
+            { group: 'Tecitos', id: 'white_tea', name: 'Té Blanco', type: 'tea', teaBagG: 2, waterMl: 200, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#E0BBE4', comment: 'Delicado y sutil, una experiencia de calma en cada sorbo.', price: 4000 },
+            { group: 'Tecitos', id: 'hibiscus_tea', name: 'Hibiscus', type: 'tea', teaBagG: 2, waterMl: 200, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#D8BFD8', comment: 'Una infusión floral con un vibrante color y sabor único.', price: 4000 }, // Pastel lila
+            { group: 'Tecitos', id: 'chai', name: 'Chai', type: 'tea', teaBagG: 2, waterMl: 200, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#A0522D', comment: 'Un viaje a la India con cada sorbo, especias y calidez.', price: 4000 },
+            { group: 'Tecitos', id: 'chai_latte', name: 'Chai Latte', type: 'tea_with_milk', teaBagG: 2, waterMl: 100, milkMl: 150, steepTimeSeconds: 240, totalCupMl: 300, cupTeaColor: '#A0522D', cupMilkColor: '#FFFDD0', frothTimeSeconds: 30, comment: 'La calidez del chai con la cremosidad de la leche. ¡Una delicia!', price: 4500 },
             // Café con Leche
-            { group: 'Café con Leche', id: 'macchiato', name: 'Macchiato', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 10, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#6F4E37', cupMilkColor: '#FFFDD0', comment: 'Un espresso con solo un toque de leche para suavizar.', description: 'Espresso "manchado" con un toque de leche.' },
-            { group: 'Café con Leche', id: 'magic', name: 'Magic', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT * 2, milkMl: 120, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#6F4E37', cupMilkColor: '#FFFDD0', comment: 'Doble shot y leche microespumada, suave y fuerte a la vez.', description: 'Doble ristretto con leche cremosa (estilo australiano).' },
-            { group: 'Café con Leche', id: 'cappuccino_milk', name: 'Cappuccino', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 150, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#5A3D2B', cupMilkColor: '#FFFDD0', comment: 'El clásico por excelencia, con esa capa perfecta de espuma.', description: 'Espresso con leche y mucha espuma.' },
-            { group: 'Café con Leche', id: 'latte_milk', name: 'Latte', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 200, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#7B5E4F', cupMilkColor: '#FFFDD0', comment: 'Suave y cremoso, ideal para disfrutar de la leche con un toque de café.', description: 'Espresso con leche suave.' },
-            { group: 'Café con Leche', id: 'flat_white', name: 'Flat White', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT * 2, milkMl: 120, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#6F4E37', cupMilkColor: '#FFFDD0', comment: 'Sin espuma excesiva, solo la combinación perfecta de café y leche.', description: 'Doble ristretto con leche microespumada.' },
-            { group: 'Café con Leche', id: 'moccacino', name: 'Moccacino', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 180, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#3A2012', cupMilkColor: '#FFFDD0', comment: 'El abrazo dulce del café y el chocolate, pura indulgencia.', description: 'Espresso, chocolate y leche espumada.' }, // Color más oscuro para base de chocolate
-            { group: 'Café con Leche', id: 'vanilla_latte', name: 'Vanilla Latte', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 200, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#7B5E4F', cupMilkColor: '#FFFDD0', comment: 'El latte que conoces, pero con ese toque dulce y aromático de vainilla.', description: 'Latte con un toque de vainilla.' },
+            { group: 'Café con Leche', id: 'macchiato', name: 'Macchiato', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 10, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#6F4E37', cupMilkColor: '#FFFDD0', comment: 'Un espresso con solo un toque de leche para suavizar.', price: 3900 },
+            { group: 'Café con Leche', id: 'cortado', name: 'Cortado', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 30, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#6F4E37', cupMilkColor: '#FFFDD0', comment: 'Un espresso con un toque de leche y un poco de espuma, perfecto para el día a día.', price: 3900 },
+            { group: 'Café con Leche', id: 'magic', name: 'Magic', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT * 2, milkMl: 120, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#6F4E37', cupMilkColor: '#FFFDD0', comment: 'Doble shot y leche microespumada, suave y fuerte a la vez.', price: 4500 },
+            { group: 'Café con Leche', id: 'cappuccino_milk', name: 'Cappuccino', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 150, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#5A3D2B', cupMilkColor: '#FFFDD0', comment: 'El clásico por excelencia, con esa capa perfecta de espuma.', price: 4600 },
+            { group: 'Café con Leche', id: 'latte_milk', name: 'Latte', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 200, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#7B5E4F', cupMilkColor: '#FFFDD0', comment: 'Suave y cremoso, ideal para disfrutar de la leche con un toque de café.', price: 4500 },
+            { group: 'Café con Leche', id: 'latte_macchiato', name: 'Latte Macchiato', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 220, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#7B5E4F', cupMilkColor: '#FFFDD0', comment: 'Leche espumada con un toque de espresso, mostrando sus hermosas capas.', price: 4500 },
+            { group: 'Café con Leche', id: 'flat_white', name: 'Flat White', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT * 2, milkMl: 120, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#6F4E37', cupMilkColor: '#FFFDD0', comment: 'Sin espuma excesiva, solo la combinación perfecta de café y leche.', price: 4800 },
+            { group: 'Café con Leche', id: 'moccacino', name: 'Moccacino', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 180, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#3A2012', cupMilkColor: '#FFFDD0', comment: 'El abrazo dulce del café y el chocolate, pura indulgencia.', price: 5000 },
+            { group: 'Café con Leche', id: 'vanilla_latte', name: 'Vanilla Latte', type: 'coffee', espressoMl: BASE_ESPRESSO_SHOT, milkMl: 200, totalCupMl: 300, frothTimeSeconds: 30, cupCoffeeColor: '#7B5E4F', cupMilkColor: '#FFFDD0', comment: 'El latte que conoces, pero con ese toque dulce y aromático de vainilla.', price: 5000 },
         ];
 
         // Función para renderizar el menú agrupado por categorías
@@ -179,6 +179,7 @@
             drinkDetailsCard.classList.add('flex'); // Asegurarse de que esté en flex para centrar contenido
 
             detailsBaristaComment.textContent = `"${drink.comment}"`; // Mostrar el comentario del barista
+            detailsPrice.textContent = `Precio: $${drink.price.toLocaleString('es-AR')}`; // Mostrar el precio
 
             // Limpiar estilos previos de la taza
             cupCoffeeFill.style.height = '0%';
@@ -204,17 +205,28 @@
                 const milkHeightInFill = (milkMl / liquidMl) * totalFillHeight;
                 const waterHeightInFill = (waterMl / liquidMl) * totalFillHeight;
 
-                cupCoffeeFill.style.height = `${espressoHeightInFill + waterHeightInFill}%`; // Café y agua en la capa de abajo
-                cupCoffeeFill.style.backgroundColor = drink.cupCoffeeColor;
-                cupCoffeeFill.style.bottom = '0%';
-
-                if (milkMl > 0) {
+                // Para Latte Macchiato, la leche va primero, luego el café
+                if (drink.id === 'latte_macchiato') {
                     cupMilkFill.style.height = `${milkHeightInFill}%`;
                     cupMilkFill.style.backgroundColor = drink.cupMilkColor;
-                    cupMilkFill.style.bottom = `${espressoHeightInFill + waterHeightInFill}%`; // Leche sobre café/agua
+                    cupMilkFill.style.bottom = '0%';
+
+                    cupCoffeeFill.style.height = `${espressoHeightInFill}%`;
+                    cupCoffeeFill.style.backgroundColor = drink.cupCoffeeColor;
+                    cupCoffeeFill.style.bottom = `${milkHeightInFill}%`; // Café sobre la leche
                 } else {
-                    cupMilkFill.style.height = '0%';
-                    cupMilkFill.style.backgroundColor = 'transparent';
+                    cupCoffeeFill.style.height = `${espressoHeightInFill + waterHeightInFill}%`; // Café y agua en la capa de abajo
+                    cupCoffeeFill.style.backgroundColor = drink.cupCoffeeColor;
+                    cupCoffeeFill.style.bottom = '0%';
+
+                    if (milkMl > 0) {
+                        cupMilkFill.style.height = `${milkHeightInFill}%`;
+                        cupMilkFill.style.backgroundColor = drink.cupMilkColor;
+                        cupMilkFill.style.bottom = `${espressoHeightInFill + waterHeightInFill}%`; // Leche sobre café/agua
+                    } else {
+                        cupMilkFill.style.height = '0%';
+                        cupMilkFill.style.backgroundColor = 'transparent';
+                    }
                 }
 
                 timerLabel.textContent = 'Temporizador de Batido:';
